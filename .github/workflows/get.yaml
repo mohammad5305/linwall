@@ -1,0 +1,25 @@
+name: Getting new images
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  get_images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Creating images dir
+        run: |
+          mkdir -p ./images
+          touch ./test.log
+
+      - name: Updating images dir
+        env:
+          TEL_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: bash ./get_images.sh
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Images updated'
